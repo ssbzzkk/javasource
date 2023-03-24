@@ -140,7 +140,125 @@ public class DeptDao {
 			close(con, pstmt, rs);
 		}
 		return list;
+	}//getRows종료
+	
+	//새 부서 추가 메소드
+	public boolean insert(DeptDTO dto) {
+		boolean status = false;
+		try {
+			//insert 성공 여부 담는 변수
+			
+			con = getConnection();
+			String sql = "insert into dept_temp(deptno, dname, loc) values(?,?,?)";
+			pstmt = con.prepareStatement(sql);
+			//? 처리
+			pstmt.setInt(1, dto.getDeptno());
+			pstmt.setString(2, dto.getDname());
+			pstmt.setString(3, dto.getLoc());
+			
+			int result = pstmt.executeUpdate(); //DML은 excuteUpdate 로 정해져있음
+			
+			if(result > 0) status = true;
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			close(con, pstmt);
+		}
+		return status;
+		
+		
+		
 	}
+	public boolean insert(int deptno, String dname, String loc) {
+		boolean status = false;
+		try {
+			//insert 성공 여부 담는 변수
+			
+			con = getConnection();
+			String sql = "insert into dept_temp(deptno, dname, loc) values(?,?,?)";
+			pstmt = con.prepareStatement(sql);
+			//? 처리
+			pstmt.setInt(1, deptno);
+			pstmt.setString(2, dname);
+			pstmt.setString(3, loc);
+			
+			int result = pstmt.executeUpdate(); //DML은 excuteUpdate 로 정해져있음
+			
+			if(result > 0) status = true;
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			close(con, pstmt);
+		}
+		return status;
+		
+		
+		
+	}//insert메소드 종료
+	
+	
+	// 부서 정보 수정 메소드
+	public boolean update(String value, int deptno, int updateNo) {
+		boolean status = false;
+		String sql=null;
+		try {
+			con = getConnection();
+			if(updateNo==1) {
+				//부서 수정
+				sql="update dept_temp set dname=? where deptno=?";
+			}
+			else if(updateNo==2) {
+				//위치 수정
+				sql="update dept_temp set loc=? where deptno=?";
+			}
+			
+		pstmt = con.prepareStatement(sql);
+		//?처리
+		pstmt.setString(1, value);
+		pstmt.setInt(2, deptno);
+		
+		int result = pstmt.executeUpdate();
+		
+		if(result>0) status = true;
+		
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			close(con, pstmt);
+		}
+		return status;
+	}//부서 정보 수정 메소드 종료
+	
+	//부서 정보 삭제
+	public boolean remove(int deptno) {
+		boolean status = false;
+		
+		try {
+			con = getConnection();
+			//deptno 일치한 부서 삭제
+			String sql="Delete from dept_temp where deptno=?";
+			
+			pstmt = con.prepareStatement(sql);
+			//?처리
+			pstmt.setInt(1, deptno);
+			
+			int result = pstmt.executeUpdate();
+			
+			if(result>0) status=true;
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			close(con, pstmt);
+		}
+		return status;
+		
+		
+	}//부서정보 삭제 종료
+	
 	
 }
 
