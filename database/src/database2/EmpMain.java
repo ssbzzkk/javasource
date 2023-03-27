@@ -24,23 +24,50 @@ public class EmpMain {
 			//메뉴번호 입력받기
 			
 			//switch 작성
+			String ename=null;
+			String job=null;
 			int menu = Integer.parseInt(sc.nextLine());
 			switch (menu) {
 			case 1:
+				//삽입할 사원정보 입력받기
+				//empno, ename, job, mgr, hiredate, sal, comm, deptno
+				EmpDTO empDTO=new EmpDTO();
+				System.out.println("새 사원 추가>>");
+				System.out.print("사원번호>>");
+				empDTO.setEmpno(Integer.parseInt(sc.nextLine()));
+				System.out.print("사원이름>>");
+				empDTO.setEname(sc.nextLine());
+				System.out.print("직무>>");
+				empDTO.setJob(sc.nextLine());
+				System.out.print("매니저번호>>");
+				empDTO.setMgr(Integer.parseInt(sc.nextLine()));
+				System.out.print("급여>>");
+				empDTO.setSal(Integer.parseInt(sc.nextLine()));
+				System.out.print("추가수당>>");
+				empDTO.setComm(Integer.parseInt(sc.nextLine()));
+				System.out.print("부서번호>>");
+				empDTO.setDeptno(Integer.parseInt(sc.nextLine()));
 				
-				
-				
+				System.out.println(empDAO.insert(empDTO)?"추가성공":"추가실패");
 				
 				
 				break;
 			case 2:
+				System.out.println("삭제할 정보 입력>>");
+				System.out.print("사원번호>>");
+				int empno=Integer.parseInt(sc.nextLine());
+
+				
+				System.out.println(empDAO.remove(empno)?"삭제성공":"삭제실패");
+				
+				
 				
 				break;
 			case 3:
 				//empno, sal 입력받기
 				System.out.println("수정할 정보 입력>>");
 				System.out.print("사원번호>>");
-				int empno=Integer.parseInt(sc.nextLine());
+				empno=Integer.parseInt(sc.nextLine());
 				
 				System.out.print("수정급여>>");
 				int sal=Integer.parseInt(sc.nextLine());
@@ -72,7 +99,7 @@ public class EmpMain {
 			case 5:
 				//ename 입력받기
 				System.out.print("조회할 사원이름 입력>>");
-				String ename=sc.nextLine();
+				ename=sc.nextLine();
 				
 				// ArrayList 가 빈 상태 or 데이터가 담겨 있는 상태
 				ArrayList<EmpDTO> list =empDAO.getList(ename);
@@ -86,11 +113,11 @@ public class EmpMain {
 				
 					System.out.println("사번\t사원명\t직무\t입사일");
 					System.out.println("--------------------------");
-					for (EmpDTO empDTO : list) {
-						System.out.print(empDTO.getEmpno()  +"\t");
-						System.out.print(empDTO.getEname()  +"\t");
-						System.out.print(empDTO.getJob()  +"\t");
-						System.out.print(empDTO.getHiredate()  +"\n\n");
+					for (EmpDTO empDTO1 : list) {
+						System.out.print(empDTO1.getEmpno()  +"\t");
+						System.out.print(empDTO1.getEname()  +"\t");
+						System.out.print(empDTO1.getJob()  +"\t");
+						System.out.print(empDTO1.getHiredate()  +"\n\n");
 					}
 				
 				}
