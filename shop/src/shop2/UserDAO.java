@@ -52,27 +52,22 @@ public class UserDAO {
 		List<UserDTO> list = new ArrayList<>();
 		
 		try {
-			
 			con = getConnection();
-			
-			
+				
 			// suser 전체 조회
-			String sql="select * from suser";
-			
+//			String sql="select * from suser";
+			String sql="select u.user_id, u.name, u.pay_no, p.info "
+					+ "from suser u, paytype p "
+					+ "where u.pay_no = p.pay_no";
 			pstmt=con.prepareStatement(sql);
 			rs=pstmt.executeQuery();
 			
 			while (rs.next()) {
 //				UserDTO dto = new UserDTO(rs.getInt(1), rs.getString(2), rs.getInt(3));
 //				list.add(dto);
-//				
-				
-				
-				list.add(new UserDTO(rs.getInt(1), rs.getString(2), rs.getInt(3)));
-				
-			}
-					
-					
+//					
+				list.add(new UserDTO(rs.getInt(1), rs.getString(2), rs.getInt(3), rs.getString(4)));	
+			}					
 		} catch (Exception e) {
 			e.printStackTrace();
 		}finally {

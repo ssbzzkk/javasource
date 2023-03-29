@@ -15,7 +15,7 @@ public class ProductDAO {
 	private ResultSet rs;
 	
 	//전체 상품 조회
-	public List<ProductDTO>	geList(){
+	public List<ProductDTO>	getList(){
 		
 		List<ProductDTO> list = new ArrayList<>();
 		

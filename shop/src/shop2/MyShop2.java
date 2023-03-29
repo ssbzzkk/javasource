@@ -8,18 +8,14 @@ public class MyShop2 implements IShop{
 	
 	//쇼핑몰 이름
 	private String title;
-	//user 정보 저장 배열
-	UserDTO[] users = new UserDTO[2];
-	//product 정보 저장 배열
-	Product products[] = new Product[4];
-	//구매한 제품을 저장 배열(cart)
-	Product carts[] = new Product[10];
+	
 	
 	//선택된 user 저장 
 	private int selUser;
 	
 	//UserDAO 객체 생성
 	UserDAO userDAO = new UserDAO();
+	OrderDAO orderDAO = new OrderDAO();
 	//ProductDAO 객체 생성
 	ProductDAO productDAO = new ProductDAO();
 	Scanner sc = new Scanner(System.in);
@@ -81,9 +77,15 @@ public class MyShop2 implements IShop{
 		System.out.println(title + " : 메인화면 - 계정 선택");
 		System.out.println("===========================================");
 		
-//		for (int i = 0; i < users.length; i++) {
-//			System.out.printf("[%d] %s(%s)\n",i,users[i].getName(),users[i].getPayType());
-//		}
+		//전체 user정보 출력
+		List<UserDTO> list = userDAO.getList();
+		for (UserDTO userDTO : list) {
+			System.out.print(userDTO.getUserId()+"\t");
+			System.out.print(userDTO.getName()+"\t");
+//			System.out.print(userDTO.getPayNo()+"\t");
+			System.out.print(userDTO.getType()+"\n");
+		}
+		
 		System.out.println("[x] 종   료");
 		System.out.print("선택 : ");
 		String sel = sc.nextLine();
@@ -96,7 +98,7 @@ public class MyShop2 implements IShop{
 		case "x": case "X":
 			System.exit(0);  //프로그램 종료
 			break;
-		case "0": case "1":
+		case "1000": case "1112": case "9999":
 			selUser = Integer.parseInt(sel);
 			productList();
 			break;
@@ -112,29 +114,29 @@ public class MyShop2 implements IShop{
 		System.out.println(title + " : 상품 목록 - 상품 선택");
 		System.out.println("========================================");
 		
-		//products 배열 출력
-		for (int i = 0; i < products.length; i++) {
-			System.out.printf("[%d]",i);
-			products[i].printDetail();
-			products[i].printExtra();
+		//product 데이터베이스 상품 출력
+		//prodcut_id, pname, price, content출력
+		List<ProductDTO> productlist =productDAO.getList();
+		for (ProductDTO productDTO : productlist) {
+			System.out.print(productDTO.getProduct_id()+"\t");
+			System.out.print(productDTO.getPname()+"\t");
+			System.out.print(productDTO.getPrice()+"\t");
+			System.out.print(productDTO.getContent()+"\n");
 		}
+		
+		
 		System.out.println("[h] 메인 화면");
 		System.out.println("[c] 체크 아웃");
 		System.out.print("선택 : ");
 		
 		
 		String sel = sc.nextLine();
-		// 상품선택 시 0~3 => cart 제품 추가, productList() 호출
+		// 상품선택 시 => sorder 저장 , ductList() 호출
 		// h => start 메소드 호출, c => checkOut() 호출
 		switch (sel) {
-		case "0":case "1":case "2":case "3":
-			for (int i = 0; i < carts.length; i++) {
-				if(carts[i] == null) {
-					// Integer.parseInt("0") ==> 0
-					carts[i] = products[Integer.parseInt(sel)];
-					break;
-				}
-			}
+		case "1111":case "1112":case "2":case "3":
+			orderDAO.insert(selUser, Integer.parseInt(sel));
+									
 			productList();
 			break;
 		case "h": case "H":
@@ -156,13 +158,26 @@ public class MyShop2 implements IShop{
 		
 		//carts 출력
 		int total = 0; //제품 가격 합계
-		for (int i = 0; i < carts.length; i++) {
-			if(carts[i] != null) {
-				System.out.printf("[%d] %s(%d)\n",i,carts[i].getName(),carts[i].getPrice());
-				total += carts[i].getPrice();
-			}
+		
+		List<OrderDTO> list=orderDAO.carts(selUser);
+		System.out.println("아이디  이름  결제방법  제품번호  제품명  가격  상세내용 주문일자");
+		for (OrderDTO orderDTO : list) {
+			//아이디, 이름, 결제방법 => OrderDTO안 UserDTO
+			System.out.print(orderDTO.getUserDTO().getUserId()+"\t");
+			System.out.print(orderDTO.getUserDTO().getName()+"\t");
+			System.out.print(orderDTO.getUserDTO().getType()+"\t");
+			System.out.print(orderDTO.getProductDTO().getProduct_id()+"\t");
+			System.out.print(orderDTO.getProductDTO().getPname()+"\t");
+			System.out.print(orderDTO.getProductDTO().getPrice()+"\t");
+			System.out.print(orderDTO.getProductDTO().getContent()+"\t");
+			System.out.print(orderDTO.getOrder_date()+"\n");
+			
+			//가격 합산
+			total+= orderDTO.getProductDTO().getPrice();
+			
 		}
 		
+	
 		System.out.println("========================================");
 //		System.out.println("결제 방법 : "+users[selUser].getPayType());
 		System.out.println("결제 금액 : "+total);
