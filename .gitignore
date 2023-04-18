@@ -98,4 +98,15 @@ replay_pid*
 *.classpath
 *.project
 *ch1/.gitignore
-[crs]*/.gitignore
+servers/
+[a-z]*/.gitignore
+ch1/.project
+ch2/.project
+ch3/.project
+ch4/.project
+ch5/.project
+ch6/.project
+ch7/.project
+register/.project
+shop/.project
+Test/.project
