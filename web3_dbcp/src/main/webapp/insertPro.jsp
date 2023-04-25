@@ -4,7 +4,7 @@
 <%
 	//사용자를 위한 페이지가 아님==>개발자를 위한 페이지
 	//백엔드 작업
-
+	
 	request.setCharacterEncoding("utf-8");
 	
 	//form에서 데이터 가져오기
