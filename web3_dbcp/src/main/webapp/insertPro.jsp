@@ -13,6 +13,8 @@
 	String addr = request.getParameter("addr");
 	String mobile = request.getParameter("mobile");
 	
+	System.out.print(name);
+	
 	UserDAO dao = new UserDAO();
 	boolean flag = dao.insert(name, birthYear, addr, mobile);
 	

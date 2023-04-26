@@ -1,13 +1,19 @@
 package controller;
 
 import java.io.IOException;
+
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.naming.factory.TransactionFactory;
+
 import action.Action;
+import action.ActionFactory;
+import action.ActionForward;
 import action.DeleteAction;
 import action.InsertAction;
 
@@ -18,13 +24,13 @@ import action.InsertAction;
 public class PatternController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
+	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	
+		//한글 안깨지게
 		request.setCharacterEncoding("utf-8");
 		
+		//1)요청이 어디서 왔을까?
 		String requestURI = request.getRequestURI();
 		//프로젝트 == context
 		String contextPath = request.getContextPath();
@@ -34,28 +40,25 @@ public class PatternController extends HttpServlet {
 		System.out.println("contextPath"+contextPath);
 		System.out.println("cmd"+cmd);
 		
-		//부모가 Action 이 되버림
-		Action action = null;
+		//ActionFactory  부르려면
+		//싱글톤 패턴
+		ActionFactory actionFactory = ActionFactory.getInstance();		
+		Action action = actionFactory.action(cmd);
 		
-		//어디서 요청이 왔는지
-		if(cmd.equals("/insert.do")) {
-			action  = new InsertAction();
-			try {
-				action.execute(request);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}else if(cmd.equals("/list.do")) {
-			
-		}else if(cmd.equals("/update.do")) {
-			
-		}else if(cmd.equals("/delete.do")) {
-			action = new DeleteAction();
-			try {
-				action.execute(request);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+		//3)생성된 액션에 일 시키기(메소드호출)
+			// 서블릿이 받은 request => 액션에게 넘김
+		ActionForward af = null;
+		try {
+			af = action.execute(request);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		//
+		if(af.isRedirect()) {
+			response.sendRedirect(af.getPath());
+		}else {
+			RequestDispatcher rd = request.getRequestDispatcher(af.getPath());
+			rd.forward(request, response);
 		}
 		
 	}
