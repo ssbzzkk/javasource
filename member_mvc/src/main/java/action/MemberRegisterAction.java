@@ -18,17 +18,18 @@ public class MemberRegisterAction implements Action {
 		
 		memberDTO registerDto = new memberDTO(userid, password, name, gender,email);
 		
+		//service
 		MemberRegisterService service = new MemberRegisterService();
 		boolean registerFlag = service.register(registerDto);
 		
+		//회원가입 성공시 로그인 페이지 
 		String path ="";
 		if(registerFlag) {
-			path = "index.jsp";
+			path = "login.jsp";
 		}else {
 			path="register.jsp";
 		}
-		
-		
+		//ActionForward
 		return new ActionForward(true,path);
 	}
 
