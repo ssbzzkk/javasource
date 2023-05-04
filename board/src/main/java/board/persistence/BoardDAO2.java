@@ -15,7 +15,7 @@ import javax.sql.DataSource;
 import board.domain.BoardDTO;
 import board.domain.PageDTO;
 
-public class BoardDAO {
+public class BoardDAO2 {
 	private Connection con;
 	private PreparedStatement pstmt;
 	private ResultSet rs;
@@ -118,34 +118,11 @@ public class BoardDAO {
 		try {
 			con = getConnection();
 			
-			String sql=null;
-			if(pageDTO.getKeyword().isEmpty()&&pageDTO.getCriteria().isEmpty()) {
-				//전체
-//				sql = "select bno, title, name, regdate, cnt, re_lev from board order by re_ref desc, re_seq asc";
-				
-				//페이지 나누기
-			sql = "select * ";
-			sql +="from(select rownum rnum, bno, title, name,regdate,cnt, re_lev ";
-			sql +="from(select bno, title, name,regdate,cnt, re_lev " ;
-			sql +="from board order by re_ref desc, re_seq asc) ";
-			sql +="where rownum<=?) ";
-			sql +="where rnum>?";
-				pstmt = con.prepareStatement(sql);
-				//rownum 값 페이지번호 * 한 페이지에 보여줄 목룍 개수
-				//rnum 값 : (페이지번호-1) * 한 페이지에 보여줄 목록 개수
-				int start= pageDTO.getPage()*pageDTO.getAmount();
-				int end=(pageDTO.getPage()-1)*pageDTO.getAmount();
-				pstmt.setInt(1, start);
-				pstmt.setInt(2, end);
-				
-			}else {
-				//검색
-				sql="select bno,title,name,regdate,cnt, re_lev from board ";
-				sql += "where "+pageDTO.getCriteria()+ " like ? order by re_ref desc, re_seq asc";
-				pstmt=con.prepareStatement(sql);
-				pstmt.setString(1, "%"+pageDTO.getKeyword()+"%");			
-			}
 			
+			
+			String sql = "select bno, title, name, regdate, cnt, re_lev from board order by re_ref desc, re_seq asc";
+			pstmt = con.prepareStatement(sql);
+						
 			rs=pstmt.executeQuery();
 			
 			while(rs.next()) {
