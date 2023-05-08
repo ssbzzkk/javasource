@@ -3,10 +3,10 @@
  */
  const modifyForm = document.querySelector("#modifyForm");
  const password = document.querySelector("#inputPassword");
- document.querySelector(".btn-success").addEventListener("click",()=>{
-	 	 
-	 	 
-	 	 location.href="list.do";
+ document.querySelector(".btn-success").addEventListener("click",()=>{	 	 
+	 	 //location.href="list.do";
+	 	 modifyForm.action="delete.do";
+	 	 modifyForm.submit();
  });
  
  //삭제 버튼 클릭시 modifyForm전송
